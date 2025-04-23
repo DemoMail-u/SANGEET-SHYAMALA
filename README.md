@@ -23,7 +23,7 @@
 <p style="color: green; font-weight: bold;">Done! I've added all the course details from the image into your app. Let me know if you'd like to group them by category, add filters, or anything else!</p>
 
 <div class="filter-row">
-  <input type="text" id="searchInput" placeholder="Search for a course">
+  <input type="text" id="searchInput" placeholder="Search for a course or category (e.g., dance, music)">
   <select id="dayFilter">
     <option value="">Filter by Day</option>
     <option value="Monday">Monday</option>
@@ -40,20 +40,26 @@
 
 <h2>Add New Course</h2>
 <input type="text" id="name" placeholder="Course Name">
+<input type="text" id="category" placeholder="Category (e.g., dance, music)">
 <input type="text" id="day" placeholder="Day">
 <input type="text" id="time" placeholder="Time">
 <input type="text" id="room" placeholder="Room Number">
+<select id="type">
+  <option value="Group">Group</option>
+  <option value="Individual">Individual</option>
+</select>
+<input type="number" id="students" placeholder="Number of Students (Group only)">
 <input type="file" id="imageUpload" accept="image/*">
 <button class="button-add" onclick="addCourse()">Add Course</button>
 
 <script>
   const courses = [
-    { name: "Bharatanatyam", day: "Saturday", time: "8:30 to 10:30am", room: "Dance Room A", image: "https://via.placeholder.com/50" },
-    { name: "Kathak", day: "Tuesday", time: "5:00 to 6:00pm", room: "Dance Room B", image: "https://via.placeholder.com/50" },
-    { name: "Kathak (Adv.)", day: "Wednesday", time: "5:00 to 6:00pm", room: "Dance Room B", image: "https://via.placeholder.com/50" },
-    { name: "Odissi", day: "Thursday", time: "3:30 to 5:00pm", room: "Dance Room C", image: "https://via.placeholder.com/50" },
-    { name: "Zumba", day: "Monday", time: "5:00 to 6:00pm", room: "Fitness Hall", image: "https://via.placeholder.com/50" },
-    { name: "Zumba", day: "Friday", time: "5:00 to 6:00pm", room: "Fitness Hall", image: "https://via.placeholder.com/50" }
+    { name: "Bharatanatyam", category: "dance", day: "Saturday", time: "8:30 to 10:30am", room: "Dance Room A", type: "Group", students: 10, image: "https://via.placeholder.com/50" },
+    { name: "Kathak", category: "dance", day: "Tuesday", time: "5:00 to 6:00pm", room: "Dance Room B", type: "Group", students: 8, image: "https://via.placeholder.com/50" },
+    { name: "Kathak (Adv.)", category: "dance", day: "Wednesday", time: "5:00 to 6:00pm", room: "Dance Room B", type: "Individual", students: 1, image: "https://via.placeholder.com/50" },
+    { name: "Odissi", category: "dance", day: "Thursday", time: "3:30 to 5:00pm", room: "Dance Room C", type: "Group", students: 6, image: "https://via.placeholder.com/50" },
+    { name: "Zumba", category: "dance", day: "Monday", time: "5:00 to 6:00pm", room: "Fitness Hall", type: "Group", students: 15, image: "https://via.placeholder.com/50" },
+    { name: "Zumba", category: "dance", day: "Friday", time: "5:00 to 6:00pm", room: "Fitness Hall", type: "Group", students: 15, image: "https://via.placeholder.com/50" }
   ];
 
   function renderCourses() {
@@ -64,7 +70,7 @@
 
     courses.filter(course => {
       return (
-        course.name.toLowerCase().includes(search) &&
+        (course.name.toLowerCase().includes(search) || course.category.toLowerCase().includes(search)) &&
         (dayFilter === '' || course.day.toLowerCase().includes(dayFilter))
       );
     })
@@ -76,9 +82,12 @@
         <div class="avatar"><img src="${course.image}" alt="Teacher"></div>
         <div style="flex: 1">
           <input value="${course.name}" onchange="updateCourse(${idx}, 'name', this.value)">
+          <input value="${course.category}" onchange="updateCourse(${idx}, 'category', this.value)">
           <input value="${course.day}" onchange="updateCourse(${idx}, 'day', this.value)">
           <input value="${course.time}" onchange="updateCourse(${idx}, 'time', this.value)">
           <input value="${course.room}" onchange="updateCourse(${idx}, 'room', this.value)">
+          <input value="${course.type}" onchange="updateCourse(${idx}, 'type', this.value)">
+          <input value="${course.students}" onchange="updateCourse(${idx}, 'students', this.value)">
           <input value="${course.image}" onchange="updateCourse(${idx}, 'image', this.value)">
           <button class="button-delete" onclick="deleteCourse(${idx})">Delete</button>
         </div>
@@ -89,19 +98,25 @@
 
   function addCourse() {
     const name = document.getElementById('name').value;
+    const category = document.getElementById('category').value;
     const day = document.getElementById('day').value;
     const time = document.getElementById('time').value;
     const room = document.getElementById('room').value;
+    const type = document.getElementById('type').value;
+    const students = parseInt(document.getElementById('students').value) || 0;
     const imageFile = document.getElementById('imageUpload').files[0];
 
-    if (name && day && time && room && imageFile) {
+    if (name && category && day && time && room && type && imageFile) {
       const reader = new FileReader();
       reader.onload = function(e) {
-        courses.push({ name, day, time, room, image: e.target.result });
+        courses.push({ name, category, day, time, room, type, students, image: e.target.result });
         document.getElementById('name').value = '';
+        document.getElementById('category').value = '';
         document.getElementById('day').value = '';
         document.getElementById('time').value = '';
         document.getElementById('room').value = '';
+        document.getElementById('type').value = 'Group';
+        document.getElementById('students').value = '';
         document.getElementById('imageUpload').value = '';
         renderCourses();
       };
