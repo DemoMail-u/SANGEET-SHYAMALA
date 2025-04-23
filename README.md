@@ -5,14 +5,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Course Search</title>
   <style>
-    body { font-family: sans-serif; padding: 20px; max-width: 1000px; margin: auto; }
+    body { font-family: sans-serif; padding: 20px; max-width: 1200px; margin: auto; }
     input, button, select { padding: 8px; margin: 5px 0; width: 100%; box-sizing: border-box; }
-    .card { border: 1px solid #ccc; border-radius: 10px; padding: 15px; margin-bottom: 10px; display: flex; gap: 10px; align-items: center; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 15px; }
+    .card { border: 1px solid #ccc; border-radius: 10px; padding: 15px; display: flex; gap: 10px; align-items: center; background-color: #f9f9f9; }
     .card input { margin-bottom: 5px; }
     .avatar { width: 50px; height: 50px; border-radius: 50%; overflow: hidden; }
     .avatar img { width: 100%; height: 100%; object-fit: cover; }
-    .button-delete { background-color: red; color: white; border: none; border-radius: 5px; cursor: pointer; }
-    .button-add { background-color: green; color: white; border: none; border-radius: 5px; cursor: pointer; margin-top: 10px; }
+    .button-delete { background-color: red; color: white; border: none; border-radius: 5px; cursor: pointer; padding: 5px 10px; }
+    .button-add { background-color: green; color: white; border: none; border-radius: 5px; cursor: pointer; margin-top: 10px; padding: 10px; width: 100%; }
     .filter-row { display: flex; gap: 10px; margin-bottom: 15px; flex-wrap: wrap; }
   </style>
 </head>
@@ -35,7 +36,7 @@
   </select>
 </div>
 
-<div id="courseList"></div>
+<div id="courseList" class="grid"></div>
 
 <h2>Add New Course</h2>
 <input type="text" id="name" placeholder="Course Name">
@@ -124,3 +125,4 @@
 
 </body>
 </html>
+
